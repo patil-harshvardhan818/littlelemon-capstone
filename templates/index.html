@@ -1,0 +1,87 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Little Lemon | Mediterranean Restaurant</title>
+  <meta name="description" content="Little Lemon is a family-owned Mediterranean restaurant. See our menu and book a table.">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="{% url 'home' %}">Little Lemon</a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#booking">Book a table</a></li>
+        <li><a href="{% url 'menu-list' %}">Menu API</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Little Lemon</h1>
+        <p class="hero-sub">Mediterranean cooking from a family kitchen in Chicago.</p>
+        <p>Grilled fish, hand-rolled dough and lemons in nearly everything. Come hungry, bring friends.</p>
+        <a class="button" href="#booking">Reserve a table</a>
+      </div>
+      <div class="lemon" role="img" aria-label="Illustration of a sliced lemon"></div>
+    </section>
+
+    <section id="about" class="section about">
+      <h2>Our story</h2>
+      <div class="about-grid">
+        <p>Little Lemon began with two brothers, one oven and a grandmother's recipe book. Every dish here is cooked the way it was cooked at the family table: simple ingredients, generous portions and a squeeze of citrus.</p>
+        <p>We buy our vegetables from farms around the city, bake our bread each morning and keep the menu short so everything on it is done well. The dining room is small, which is why we recommend booking ahead.</p>
+      </div>
+    </section>
+
+    <section id="menu" class="section menu">
+      <h2>{% if menu_items %}On the menu today{% else %}House favourites{% endif %}</h2>
+      <ul class="menu-list">
+        {% for item in menu_items %}
+        <li>
+          <span class="dish">{{ item.title }}</span>
+          <span class="leader" aria-hidden="true"></span>
+          <span class="price">${{ item.price }}</span>
+        </li>
+        {% empty %}
+        <li><span class="dish">Greek salad</span><span class="leader" aria-hidden="true"></span><span class="price">$12.99</span></li>
+        <li><span class="dish">Bruschetta</span><span class="leader" aria-hidden="true"></span><span class="price">$7.99</span></li>
+        <li><span class="dish">Lemon dessert</span><span class="leader" aria-hidden="true"></span><span class="price">$6.50</span></li>
+        {% endfor %}
+      </ul>
+      <p class="note">Dishes on this list are read from our database. Developers can see the full JSON menu at
+        <a href="{% url 'menu-list' %}"><code>/restaurant/menu/</code></a>.</p>
+    </section>
+
+    <section id="booking" class="section booking">
+      <h2>Book a table</h2>
+      <p>Reservations are made through our booking API. It takes three requests:</p>
+      <ol class="steps">
+        <li><strong>Create an account.</strong> <code>POST /auth/users/</code> with a username and password.</li>
+        <li><strong>Get your token.</strong> <code>POST /api-token-auth/</code> returns the token to send as <code>Authorization: Token &lt;your token&gt;</code>.</li>
+        <li><strong>Reserve.</strong> <code>POST /restaurant/booking/tables/</code> with your name, number of guests and date.</li>
+      </ol>
+      <p class="note">You can only see and change your own bookings.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-brand">Little Lemon</p>
+      <address>
+        123 Lemon Street, Chicago, IL<br>
+        Open daily, 11:00 to 22:00<br>
+        (312) 555-0123
+      </address>
+      <p class="fine">Demo restaurant created for the Django REST Framework capstone project.</p>
+    </div>
+  </footer>
+</body>
+</html>
